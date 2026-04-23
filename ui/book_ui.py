@@ -127,6 +127,13 @@ def book_screen(root):
     scrollbar.grid(row=6, column=3, sticky="ns")
 
     # ================= FUNCTIONS =================
+    def clear_fields():
+        title.delete(0, tk.END)
+        author.delete(0, tk.END)
+        isbn.delete(0, tk.END)
+        book_id.delete(0, tk.END)
+        search_entry.delete(0, tk.END)
+
     def refresh():
         for item in tree.get_children():
             tree.delete(item)
@@ -144,6 +151,7 @@ def book_screen(root):
         add_book(title.get(), author.get(), isbn.get())
         messagebox.showinfo("Success", "Book Added", parent=win)
         refresh()
+        clear_fields()
 
     def delete():
         if book_id.get() == "":
@@ -153,6 +161,7 @@ def book_screen(root):
         delete_book(int(book_id.get()))
         messagebox.showinfo("Success", "Book Deleted", parent=win)
         refresh()
+        clear_fields()
 
     def update():
         if book_id.get() == "":
@@ -168,6 +177,7 @@ def book_screen(root):
 
         messagebox.showinfo("Success", "Book Updated", parent=win)
         refresh()
+        clear_fields()
 
     def view():
         refresh()

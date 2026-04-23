@@ -1,10 +1,15 @@
 from backend.db_connection import connect
 
+
 def add_book(title, author, isbn):
     conn = connect()
     cur = conn.cursor()
-    cur.execute("INSERT INTO books(title, author, isbn) VALUES (?, ?, ?)",
-                (title, author, isbn))
+
+    cur.execute(
+        "INSERT INTO books(title, author, isbn) VALUES (?, ?, ?)",
+        (title, author, isbn)
+    )
+
     conn.commit()
     conn.close()
 
@@ -12,8 +17,10 @@ def add_book(title, author, isbn):
 def get_books():
     conn = connect()
     cur = conn.cursor()
+
     cur.execute("SELECT * FROM books")
     data = cur.fetchall()
+
     conn.close()
     return data
 
@@ -21,7 +28,9 @@ def get_books():
 def delete_book(book_id):
     conn = connect()
     cur = conn.cursor()
+
     cur.execute("DELETE FROM books WHERE book_id=?", (book_id,))
+
     conn.commit()
     conn.close()
 
@@ -30,16 +39,24 @@ def update_book(book_id, title, author, isbn):
     conn = connect()
     cur = conn.cursor()
 
-    cur.execute(
-        "UPDATE books SET title=?, author=?, isbn=? WHERE book_id=?",
-        (title, author, isbn, book_id)
-    )
+    # get old data first
+    cur.execute("SELECT * FROM books WHERE book_id=?", (book_id,))
+    old = cur.fetchone()
+
+    if old:
+        new_title = title if title.strip() != "" else old[1]
+        new_author = author if author.strip() != "" else old[2]
+        new_isbn = isbn if isbn.strip() != "" else old[3]
+
+        cur.execute(
+            "UPDATE books SET title=?, author=?, isbn=? WHERE book_id=?",
+            (new_title, new_author, new_isbn, book_id)
+        )
 
     conn.commit()
     conn.close()
 
 
-# NEW (needed for partial update)
 def get_book_by_id(book_id):
     conn = connect()
     cur = conn.cursor()
@@ -51,14 +68,13 @@ def get_book_by_id(book_id):
     return data
 
 
-# SEARCH FUNCTION
 def search_books(keyword):
     conn = connect()
     cur = conn.cursor()
 
     cur.execute("""
         SELECT * FROM books
-        WHERE 
+        WHERE
             title LIKE ? OR
             author LIKE ? OR
             isbn LIKE ? OR
@@ -71,5 +87,6 @@ def search_books(keyword):
     ))
 
     data = cur.fetchall()
+
     conn.close()
     return data

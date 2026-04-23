@@ -111,6 +111,11 @@ def member_screen(root):
     scrollbar.grid(row=5, column=3, sticky="ns")
 
     # ================= FUNCTIONS =================
+    def clear_fields():
+        name.delete(0, tk.END)
+        phone.delete(0, tk.END)
+        member_id.delete(0, tk.END)
+
     def refresh():
         for item in tree.get_children():
             tree.delete(item)
@@ -126,6 +131,7 @@ def member_screen(root):
         add_member(name.get(), phone.get())
         messagebox.showinfo("Success", "Member Added", parent=win)
         refresh()
+        clear_fields()
 
     def update():
         if member_id.get() == "":
@@ -140,6 +146,7 @@ def member_screen(root):
 
         messagebox.showinfo("Success", "Member Updated", parent=win)
         refresh()
+        clear_fields()
 
     def delete():
         if member_id.get() == "":
@@ -149,6 +156,7 @@ def member_screen(root):
         delete_member(int(member_id.get()))
         messagebox.showinfo("Success", "Member Deleted", parent=win)
         refresh()
+        clear_fields()
 
     def view():
         refresh()
@@ -169,6 +177,3 @@ def member_screen(root):
     tk.Button(frame, text="DELETE", width=14,
               bg="salmon", font=("Arial", 12, "bold"),
               command=delete).grid(row=4, column=2)
-
-    # Load data initially
-    # refresh()
