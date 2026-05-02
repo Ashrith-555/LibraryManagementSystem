@@ -24,6 +24,9 @@ Library Management System is a desktop-based application developed to automate a
 - images → Background images used in modules
 - database → SQLite database file
 - main.py → Main application entry point
+## Login Credentials:
+Username: admin
+Password: admin123
 
 ## How to Run
 1. Open project folder  
